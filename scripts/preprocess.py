@@ -1,4 +1,5 @@
 import os
+import json
 import numpy as np
 from pyedflib import EdfReader
 from concurrent.futures import ThreadPoolExecutor
@@ -92,9 +93,14 @@ def process_file(args):
     return file_features, file_labels
 
 def preprocess_multiple_patients(data_dirs, summary_files, channels, sampling_rate, output_dir):
-    if os.path.exists(os.path.join(output_dir, "features.npy")) and os.path.exists(os.path.join(output_dir, "labels.npy")):
-        print("[INFO] Processed data already exists. Skipping preprocessing.")
-        return
+    processed_file = os.path.join(output_dir, "processed_patients.json")
+
+    # Load or create the processed patients tracker
+    if os.path.exists(processed_file):
+        with open(processed_file, "r") as file:
+            processed_patients = json.load(file)
+    else:
+        processed_patients = []
 
     all_features = []
     all_labels = []
@@ -104,6 +110,11 @@ def preprocess_multiple_patients(data_dirs, summary_files, channels, sampling_ra
 
     tasks = []
     for data_dir, summary_file in zip(data_dirs, summary_files):
+        patient_id = os.path.basename(data_dir)
+        if patient_id in processed_patients:
+            print(f"[INFO] Data for {patient_id} has already been processed. Skipping.")
+            continue
+
         print(f"[INFO] Preparing task for patient directory: {data_dir}")
         summary_info = parse_summary_file(summary_file)
         tasks.append((data_dir, summary_info, channels, sampling_rate))
@@ -120,6 +131,12 @@ def preprocess_multiple_patients(data_dirs, summary_files, channels, sampling_ra
     np.save(os.path.join(output_dir, "features.npy"), np.array(all_features))
     np.save(os.path.join(output_dir, "labels.npy"), np.array(all_labels))
     print(f"[INFO] Data saved to {output_dir}/features.npy and {output_dir}/labels.npy")
+
+    # Update the processed patients tracker
+    for data_dir in data_dirs:
+        processed_patients.append(os.path.basename(data_dir))
+    with open(processed_file, "w") as file:
+        json.dump(processed_patients, file)
 
 if __name__ == "__main__":
     patients = ["chb01", "chb02", "chb05", "chb16", "chb21", "chb23"]

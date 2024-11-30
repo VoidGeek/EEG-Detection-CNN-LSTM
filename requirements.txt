@@ -1,0 +1,7 @@
+tensorflow
+keras
+numpy
+scikit-learn
+imbalanced-learn
+pyedflib
+tqdm
