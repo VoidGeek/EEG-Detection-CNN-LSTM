@@ -1,9 +1,16 @@
+import os
 import numpy as np
 from sklearn.metrics import classification_report, confusion_matrix, precision_recall_curve, auc
 from keras import models
 
 def evaluate_model(model_path, features_file, labels_file):
     print("[INFO] Loading preprocessed data and model.")
+    
+    if not os.path.exists(features_file) or not os.path.exists(labels_file):
+        raise FileNotFoundError("[ERROR] Preprocessed data not found. Please run the preprocessing script first.")
+    if not os.path.exists(model_path):
+        raise FileNotFoundError("[ERROR] Model file not found. Please train the model first.")
+
     X_test = np.load(features_file)
     y_test = np.load(labels_file)
 
@@ -11,6 +18,7 @@ def evaluate_model(model_path, features_file, labels_file):
     X_test = X_test.reshape(X_test.shape[0], X_test.shape[1], 1)
     y_test = np.argmax(y_test, axis=1)
 
+    print("[INFO] Loading model.")
     model = models.load_model(model_path)
 
     print("[INFO] Predicting on test data.")
@@ -26,3 +34,12 @@ def evaluate_model(model_path, features_file, labels_file):
     precision, recall, thresholds = precision_recall_curve(y_test, y_pred_probs[:, 1])
     pr_auc = auc(recall, precision)
     print(f"\nPrecision-Recall AUC: {pr_auc:.4f}")
+
+if __name__ == "__main__":
+    model_path = "../model/model.h5"
+    features_file = "../processed_data/features.npy"
+    labels_file = "../processed_data/labels.npy"
+
+    print("[INFO] Starting evaluation process.")
+    evaluate_model(model_path, features_file, labels_file)
+    print("[INFO] Evaluation completed successfully.")

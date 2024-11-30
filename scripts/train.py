@@ -22,8 +22,11 @@ def build_cnn_lstm(input_shape):
     model.compile(optimizer=optimizers.Adam(learning_rate=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
     return model
 
-def train_model(features_file, labels_file, model_save_path="./model/model.h5"):
+def train_model(model_save_path,features_file,labels_file):
     print("[INFO] Loading preprocessed data.")
+    if not os.path.exists(features_file) or not os.path.exists(labels_file):
+        raise FileNotFoundError("[ERROR] Preprocessed data not found. Please run the preprocessing script first.")
+    
     X = np.load(features_file)
     y = np.load(labels_file)
 
@@ -51,3 +54,11 @@ def train_model(features_file, labels_file, model_save_path="./model/model.h5"):
     print(f"[INFO] Model saved to {model_save_path}")
 
     return model, X_test, y_test
+
+if __name__ == "__main__":
+    model_save_path = "../model/model.h5"
+    features_file = "../processed_data/features.npy"
+    labels_file = "../processed_data/labels.npy"
+    print("[INFO] Starting training process.")
+    model, X_test, y_test = train_model(model_save_path)
+    print("[INFO] Training completed successfully.")
