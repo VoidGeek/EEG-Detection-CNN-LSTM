@@ -1,0 +1,47 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+env/
+*.env
+
+# Data files
+*.edf
+processed_data/
+data/
+
+# Model files
+model/
+*.h5
+*.pb
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs and debug files
+*.log
+*.out
+*.err
+
+# IDE specific files
+.vscode/
+.idea/
+*.iml
+
+# Operating system files
+*.swp
+*.swo
+*.bak
+*.tmp
+*.temp
+
+# Requirements lock files
+pip-log.txt
