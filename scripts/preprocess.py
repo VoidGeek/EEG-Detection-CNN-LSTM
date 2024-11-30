@@ -71,7 +71,7 @@ def label_data(signal_length, sampling_rate, seizures):
                     labels[window_idx] = 1
     return labels
 
-def preprocess_multiple_patients(data_dirs, summary_files, channels, sampling_rate=256, output_dir="./processed_data"):
+def preprocess_multiple_patients(data_dirs, summary_files, channels, sampling_rate=256, output_dir="../processed_data"):
     all_features = []
     all_labels = []
 
@@ -105,3 +105,19 @@ def preprocess_multiple_patients(data_dirs, summary_files, channels, sampling_ra
     np.save(os.path.join(output_dir, "features.npy"), np.array(all_features))
     np.save(os.path.join(output_dir, "labels.npy"), np.array(all_labels))
     print(f"[INFO] Data saved to {output_dir}/features.npy and {output_dir}/labels.npy")
+
+if __name__ == "__main__":
+    # Define input directories and channels
+    patients = ["chb01", "chb02", "chb05", "chb16", "chb21", "chb23"]
+    data_directories = [f"../data/{patient}" for patient in patients]
+    summary_files = [f"../data/{patient}/{patient}-summary.txt" for patient in patients]
+
+    channels = [
+        "FP1-F7", "F7-T7", "T7-P7", "P7-O1", "FP1-F3", "F3-C3", "C3-P3", "P3-O1",
+        "FZ-CZ", "CZ-PZ", "FP2-F4", "F4-C4", "C4-P4", "P4-O2", "FP2-F8", "F8-T8",
+        "T8-P8", "P8-O2"
+    ]
+
+    output_dir = "./processed_data"
+
+    preprocess_multiple_patients(data_directories, summary_files, channels, sampling_rate=256, output_dir=output_dir)
