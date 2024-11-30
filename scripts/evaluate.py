@@ -16,7 +16,10 @@ def evaluate_model(model_path, features_file, labels_file):
 
     print("[INFO] Reshaping data for evaluation.")
     X_test = X_test.reshape(X_test.shape[0], X_test.shape[1], 1)
-    y_test = np.argmax(y_test, axis=1)
+
+    # No need to apply np.argmax if y_test is already a 1D array of labels
+    if y_test.ndim == 2:  # Check if y_test is one-hot encoded
+        y_test = np.argmax(y_test, axis=1)
 
     print("[INFO] Loading model.")
     model = models.load_model(model_path)
