@@ -9,9 +9,9 @@ Project/
 ├── processed_data/             # Preprocessed features and labels (automatically generated)
 │    ├── features.npy 
 │    └── labels.npy              
-├── model                       # Saved trained models
+├── model/                       # Saved trained models
 │    └── model.h5  
-├── scripts
+├── scripts/
 │    ├── preprocess.py/         # Data preprocessing script
 │    ├── train.py/              # Training script
 │    └── evaluate.py/           # Evaluation script  
