@@ -1,4 +1,4 @@
-# EEG Detection Preprocessing Script
+# EEG Detection using CNN-LSTM Hybrid Model
 
 This repository contains a Python script for preprocessing EEG data for seizure detection using EDF files.
 
