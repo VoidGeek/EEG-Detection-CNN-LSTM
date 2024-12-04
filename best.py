@@ -25,17 +25,19 @@ X = pca.fit_transform(X)
 X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.30, random_state=1)
 X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.50, random_state=1)
 
-print(f"Training set size: {X_train.shape[0]}")
-print(f"Validation set size: {X_val.shape[0]}")
-print(f"Test set size: {X_test.shape[0]}")
+# Save test set for future use
+np.save('X_test.npy', X_test)
+np.save('y_test.npy', y_test)
 
 # Normalize input data
 X_train = (X_train - X_train.mean(axis=0)) / X_train.std(axis=0)
 X_val = (X_val - X_val.mean(axis=0)) / X_val.std(axis=0)
+X_test = (X_test - X_test.mean(axis=0)) / X_test.std(axis=0)
 
 # Handle potential NaN or infinity values in normalized data
 X_train = np.nan_to_num(X_train)
 X_val = np.nan_to_num(X_val)
+X_test = np.nan_to_num(X_test)
 
 # Define the model
 model = models.Sequential([
@@ -64,10 +66,6 @@ history = model.fit(
 # Save the trained model
 model.save('epileptic_seizure_detection_model.h5')
 print("Model saved as 'epileptic_seizure_detection_model.h5'")
-
-# Save the test set for evaluation
-np.save('X_test.npy', X_test)
-np.save('y_test.npy', y_test)
 
 # Predictions and Confusion Matrix for Training Data
 y_train_pred_probs = model.predict(X_train)

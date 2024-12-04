@@ -10,6 +10,7 @@ env/
 *.env
 
 # Data files
+*.npy
 *.edf
 processed_data/
 data/
