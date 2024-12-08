@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, classification_report
 from keras import models, layers
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -26,8 +26,8 @@ X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.30, random
 X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.50, random_state=1)
 
 # Save test set for future use
-np.save('X_test1.npy', X_test)
-np.save('y_test1.npy', y_test)
+np.save('X_test.npy', X_test)
+np.save('y_test.npy', y_test)
 
 # Normalize input data
 X_train = (X_train - X_train.mean(axis=0)) / X_train.std(axis=0)
@@ -39,16 +39,12 @@ X_train = np.nan_to_num(X_train)
 X_val = np.nan_to_num(X_val)
 X_test = np.nan_to_num(X_test)
 
-# Reshape input data for LSTM
-X_train = X_train.reshape(X_train.shape[0], X_train.shape[1], 1)
-X_val = X_val.reshape(X_val.shape[0], X_val.shape[1], 1)
-X_test = X_test.reshape(X_test.shape[0], X_test.shape[1], 1)
-
-# Define the LSTM model
+# Define the model
 model = models.Sequential([
-    layers.Input(shape=(45, 1)),  # 45 features, 1 timestep
-    layers.LSTM(128, return_sequences=True),
-    layers.LSTM(64),
+    layers.Input(shape=(45,)),
+    layers.Dense(256, activation='relu'),
+    layers.Dense(128, activation='relu'),
+    layers.Dense(64, activation='relu'),
     layers.Dense(32, activation='relu'),
     layers.Dense(16, activation='relu'),
     layers.Dense(1, activation='sigmoid')  # Binary classification output
@@ -68,8 +64,8 @@ history = model.fit(
 )
 
 # Save the trained model
-model.save('epileptic_seizure_detection_lstm_model.h5')
-print("Model saved as 'epileptic_seizure_detection_lstm_model.h5'")
+model.save('epileptic_seizure_detection_model.h5')
+print("Model saved as 'epileptic_seizure_detection_model.h5'")
 
 # Predictions and Confusion Matrix for Training Data
 y_train_pred_probs = model.predict(X_train)
