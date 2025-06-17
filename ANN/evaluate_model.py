@@ -8,8 +8,8 @@ import seaborn as sns
 model = load_model('epileptic_seizure_detection_model.h5')
 
 # Load the saved test set
-X_test = np.load('X_test.npy')
-y_test = np.load('y_test.npy')
+X_test = np.load('E:\EEG-Detection-CNN-LSTM\X_test.npy')
+y_test = np.load('E:\EEG-Detection-CNN-LSTM\y_test.npy')
 
 # Normalize input data
 X_test = (X_test - X_test.mean(axis=0)) / X_test.std(axis=0)

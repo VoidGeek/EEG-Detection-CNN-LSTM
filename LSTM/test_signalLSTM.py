@@ -8,7 +8,7 @@ from sklearn.metrics import confusion_matrix, classification_report
 
 # Parameters
 n_features = 256  # Number of original features (time steps per signal, e.g., 1 second @ 256 Hz sampling rate)
-n_samples = 500  # Total samples to generate
+n_samples = 5000  # Total samples to generate
 seizure_proportion = 0.5  # Proportion of seizure samples
 n_channels = 8  # Number of EEG channels (e.g., BioAmps EEG sensor with 8 channels)
 
